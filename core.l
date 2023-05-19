@@ -1,3 +1,11 @@
+%{
+#include "y.tab.h"
+#include "string.h"
+int progCounter = 1;
+void yyerror (char *s);
+int yylex();
+%}
+
 text (\"[^\"]*\")
 character (\'[^\']\')
 integer ([-+]?[0-9]+)
