@@ -1,0 +1,97 @@
+RUN
+
+(* This is a basic program has a sum function 
+to sum two variables and print them*)
+
+intel i = 5;
+float j = 6;
+
+print(x);
+
+float z = sum(i,j);
+
+print(z);
+
+func float sum(intel first,float second) {
+    return first + second;
+}
+
+FINISH
+
+
+RUN
+
+intel i = 0;
+text even = " is even";
+text odd = " is odd";
+
+while(i <= 10){
+    if(isEven(i)) {
+        print(i + even);
+    }else{
+        print(i + odd);
+    }
+
+    i = i + 1;
+}
+
+func flag isEven(intel x) {
+    return x mod 2 == 0;
+}
+
+FINISH
+
+RUN 
+
+char c = 'a';
+
+const intel MAX = 10;
+
+while(c <= 'z') {
+    print(c);
+    c = c + 1;
+}
+
+FINISH
+
+RUN
+
+text name = "John";
+
+print("Hello " + name);
+
+FINISH
+
+RUN
+
+intel firstNumber = 5;
+intel secondNumber = 6;
+intel thirdNumber = 7;
+
+if (firstNumber > secondNumber and firstNumber > thirdNumber) {
+    print(firstNumber);
+} elif (secondNumber > firstNumber and secondNumber > thirdNumber) {
+    print(secondNumber);
+} else {
+    print(thirdNumber);
+}
+
+text fileName = "output.txt";
+
+if ( firstNumber == secondNumber or firstNumber == thirdNumber or secondNumber == thirdNumber) {
+    writeFile(fileName,"There are two numbers that are equal");
+} elif (firstNumber == secondNumber and firstNumber == thirdNumber and secondNumber == thirdNumber) {
+    writeFile(fileName,"All numbers are equal");
+} else {
+    writeFile(fileName,"All numbers are different");
+}
+
+if (firstNumber != secondNumber and firstNumber != thirdNumber and secondNumber != thirdNumber) {
+    print("All numbers are different");
+} elif (firstNumber == secondNumber and firstNumber == thirdNumber and secondNumber == thirdNumber) {
+    print("All numbers are equal");
+} else {
+    print("There are two numbers that are equal");
+}
+
+FINISH
