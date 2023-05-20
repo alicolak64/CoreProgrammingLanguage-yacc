@@ -57,19 +57,19 @@ program:
 ;
 
 statements: 
-    statement statements {printf("Statements is valid\n");}
-    | statement {printf("Statement is valid\n");}
+    statement statements {;}
+    | statement {;}
 ;    
 
 statement: 
-    printStatement SEMICOLON {printf("Print statement is valid\n");}
-    | assignmentStatement SEMICOLON {printf("Assignment statement is valid\n");}
-    | ifStatement {printf("If statement is valid\n");}
-    | whileStatement {printf("While statement is valid\n");}
-    | callFuncStatement SEMICOLON {printf("Call function statement is valid\n");}
-    | arithmeticStatement SEMICOLON {printf("Arithmetic statement is valid\n");}
-    | exitStatement {printf("Exit statement is valid\n");}
-    | funcStatement {printf("Function statement is valid\n");}
+    printStatement SEMICOLON {;}
+    | assignmentStatement SEMICOLON {;}
+    | ifStatement {;}
+    | whileStatement {;}
+    | callFuncStatement SEMICOLON {;}
+    | arithmeticStatement SEMICOLON {;}
+    | exitStatement {;}
+    | funcStatement {;}
 ;
 
 term: 
@@ -104,12 +104,15 @@ expression:
     | NOT expression {$$ = !$2;}
     | LPAREN expression RPAREN {$$ = $2;}
 ;
-
-
-
     
 block:
-    LBRACE statements RBRACE {printf("Block is valid\n");}
+    LBRACE statements RBRACE {;}
+;
+
+printStatement:
+    PRINT stringTerm {printf("%s\n", $2);}
+    | PRINT expression {printf("%d\n", $2);}
+    | PRINT NEWLINE {printf("\n");}
 ;
       
 
@@ -132,12 +135,7 @@ callFuncStatement: IDENTIFIER LPAREN params RPAREN                    {;}
               ;
 
 exitStatement: END                            {printf("See you next time\n"); exit(EXIT_SUCCESS);}
-         ;
-//print
-printStatement: PRINT stringTerm           {printf("%s\n", $2);}
-          | PRINT expression                   {printf("%d\n", $2);}
-          | PRINT NEWLINE               {printf("\n");}
-          ;       
+         ; 
             
 assignmentStatement : IDENTIFIER ASSIGN expression            {updateSymbolVal($1,$3);}
            | IDENTIFIER ASSIGN assignmentStatement     {;}
