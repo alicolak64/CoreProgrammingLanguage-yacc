@@ -20,87 +20,99 @@ char *stringsVal(char symbol);
 //calculating functions
 %}
 
-%union {int num; char id; char *str;}
-%start prog
-%token START END PRINT LPAREN RPAREN LBRACE RBRACE
-%token PLUS MINUS MULTIPLY DIVIDE MOD EQUAL NOTEQUAL LESS LESSEQUAL GREATER GREATEREQUAL AND OR FUNC NEWLINE 
-%token IF ELSE ELSEIF WHILE
-%token COMMENT ASSIGN NOT SEMICOLON COMMA
+%union {
+    int num; 
+    char id; 
+    char *str;
+}
+
+%start program
+
+%token START END PRINT NEWLINE COMMENT
+%token ASSIGN PLUS MINUS MULTIPLY DIVIDE MOD AND OR NOT
+%token EQUAL NOTEQUAL GREATER LESS GREATEREQUAL LESSEQUAL
+%token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA
+%token IF ELSE ELSEIF WHILE FUNC
+
 %token <id> IDENTIFIER
 %token <str> STRING
 %token <num> NUMBER
-%type <id> assignment 
-%type <num> exp term arithmetic_stmt
+
+%type <id> assignmentStatement 
+%type <num> exp term arithmeticStatement
 %type <str> STRING_term 
-%left '+' '-'
-%left '*' '/' 
+
+%left PLUS MINUS
+%left MULTIPLY DIVIDE MOD
+%left AND OR NOT ASSIGN
+%left EQUALS NOTEQUAL GREATER LESS GREATEREQUAL LESSEQUAL
+%left LPAREN RPAREN LBRACE RBRACE COMMA SEMICOLON NEWLINE COMMENT
+ 
 %%
 
 
 
-prog: START stmts END {;}
-    ;
+program: 
+    START statements END {printf("Program is valid\n");}
+;
 
-stmts: stmt stmts
-     | stmt
-     ;    
+statements: 
+    statement statements {printf("Statements is valid\n");}
+    | statement {printf("Statement is valid\n");}
+;    
 
-stmt: non_block_stmt
-    | block_stmt
-    ;
+statement: 
+    printStatement SEMICOLON {printf("Print statement is valid\n");}
+    | assignmentStatement SEMICOLON {printf("Assignment statement is valid\n");}
+    | ifStatement {printf("If statement is valid\n");}
+    | whileStatement {printf("While statement is valid\n");}
+    | callFuncStatement SEMICOLON {printf("Call function statement is valid\n");}
+    | arithmeticStatement SEMICOLON {printf("Arithmetic statement is valid\n");}
+    | exitStatement {printf("Exit statement is valid\n");}
+    | funcStatement {printf("Function statement is valid\n");}
+;
 
-non_block_stmt: assignment  SEMICOLON      {;}
-              | stmt_print
-              | stmt_exit
-              | arithmetic_stmt
-              | call_func_stmt
-              ;
-
-block_stmt: if_stmt                  {}
-          | while_stmt               {}
-          | func_stmt                {}
-          ;
     
-block: LBRACE stmts RBRACE {;}
+block: LBRACE statements RBRACE {;}
      ;  
       
 
-if_stmt: IF LPAREN exp RPAREN block                                {if($3 == 1) {;} else {;} }
+ifStatement: IF LPAREN exp RPAREN block                                {if($3 == 1) {;} else {;} }
        | IF LPAREN exp RPAREN block ELSE block                     {if($3 == 1) {;} else {;} }
-       | IF LPAREN exp RPAREN block elseif_stmt ELSE block         {if($3 == 1) {;} else {;} }
+       | IF LPAREN exp RPAREN block elseifStatement ELSE block         {if($3 == 1) {;} else {;} }
        ;
 
-elseif_stmt: ELSEIF LPAREN exp RPAREN block                        {if($3 == 1) ; else ;}
+elseifStatement: ELSEIF LPAREN exp RPAREN block                        {if($3 == 1) ; else ;}
            ; 
 
 
-while_stmt: WHILE LPAREN exp RPAREN block                          {;}
+whileStatement: WHILE LPAREN exp RPAREN block                          {;}
           ;
 
-func_stmt: FUNC IDENTIFIER LPAREN params RPAREN block              {;}
+funcStatement: FUNC IDENTIFIER LPAREN params RPAREN block              {;}
          ;
 
-call_func_stmt: IDENTIFIER LPAREN params RPAREN                    {;}
+callFuncStatement: IDENTIFIER LPAREN params RPAREN                    {;}
               ;
 
-stmt_exit: END                            {printf("See you next time\n"); exit(EXIT_SUCCESS);}
+exitStatement: END                            {printf("See you next time\n"); exit(EXIT_SUCCESS);}
          ;
 //print
-stmt_print: PRINT STRING_term SEMICOLON          {printf("%s\n", $2);}
-          | PRINT exp SEMICOLON                  {printf("%d\n", $2);}
-          | PRINT NEWLINE SEMICOLON              {printf("\n");}
+printStatement: PRINT STRING_term           {printf("%s\n", $2);}
+          | PRINT exp                   {printf("%d\n", $2);}
+          | PRINT NEWLINE               {printf("\n");}
           ;       
             
-assignment : IDENTIFIER ASSIGN exp            {updateSymbolVal($1,$3);}
-           | IDENTIFIER ASSIGN assignment     {;}
+assignmentStatement : IDENTIFIER ASSIGN exp            {updateSymbolVal($1,$3);}
+           | IDENTIFIER ASSIGN assignmentStatement     {;}
            | IDENTIFIER ASSIGN STRING_term    {updateStringsVal($1,$3);}
            ;    
 
-arithmetic_stmt : term                     {;} 
-                | arithmetic_stmt PLUS term {printf("%d\n", $1 + $3);}
-                | arithmetic_stmt MINUS term {printf("%d\n", $1 - $3);}
-                | arithmetic_stmt MULTIPLY term {printf("%d\n", $1 * $3);}
-                | arithmetic_stmt DIVIDE term {printf("%d\n", $1 / $3);}
+arithmeticStatement : term                     {;} 
+                | arithmeticStatement PLUS term {printf("%d\n", $1 + $3);}
+                | arithmeticStatement MINUS term {printf("%d\n", $1 - $3);}
+                | arithmeticStatement MULTIPLY term {printf("%d\n", $1 * $3);}
+                | arithmeticStatement DIVIDE term {printf("%d\n", $1 / $3);}
                 ;
 
 exp      : term                             {$$ = $1;}
