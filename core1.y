@@ -56,25 +56,25 @@ statement:
 
 
 expression:
-    expression PLUS expression {printf("Expression is valid\n");}
-    | expression MINUS expression {printf("Expression is valid\n");}
-    | expression MULTIPLY expression {printf("Expression is valid\n");}
-    | expression DIVIDE expression {printf("Expression is valid\n");}
-    | expression MOD expression {printf("Expression is valid\n");}
-    | expression AND expression {printf("Expression is valid\n");}
-    | expression OR expression {printf("Expression is valid\n");}
-    | expression EQUALS expression {printf("Expression is valid\n");}
-    | expression NOTEQUAL expression {printf("Expression is valid\n");}
-    | expression GREATER expression {printf("Expression is valid\n");}
-    | expression LESS expression {printf("Expression is valid\n");}
-    | expression GREATEREQUAL expression {printf("Expression is valid\n");}
-    | expression LESSEQUAL expression {printf("Expression is valid\n");}
+    expression PLUS expression { $$ = $1 + $3; printf("Expression is valid\n"); }
+    | expression MINUS expression { $$ = $1 - $3; printf("Expression is valid\n"); }
+    | expression MULTIPLY expression { $$ = $1 * $3; printf("Expression is valid\n"); }
+    | expression DIVIDE expression { $$ = $1 / $3.num; printf("Expression is valid\n"); }
+    | expression MOD expression { $$ = $1 % $3; printf("Expression is valid\n"); }
+    | expression AND expression { $$ = $1 && $3; printf("Expression is valid\n"); }
+    | expression OR expression { $$ = $1 || $3; printf("Expression is valid\n"); }
+    | expression EQUALS expression { $$ = $1 == $3; printf("Expression is valid\n"); }
+    | expression NOTEQUAL expression { $$ = $1 != $3; printf("Expression is valid\n"); }
+    | expression GREATER expression { $$ = $1 > $3; printf("Expression is valid\n"); }
+    | expression LESS expression { $$ = $1 < $3; printf("Expression is valid\n"); }
+    | expression GREATEREQUAL expression { $$ = $1 >= $3; printf("Expression is valid\n"); }
+    | expression LESSEQUAL expression { $$ = $1 <= $3; printf("Expression is valid\n"); }
     | LPAREN expression RPAREN {printf("Expression is valid\n");}
-    | NOT expression {printf("Expression is valid\n");}
-    | NUMBER {printf("Expression is valid\n");}
-    | IDENTIFIER {printf("Expression is valid\n");}
-    | STRING {printf("Expression is valid\n");}
-    | functioncallStatement {printf("Expression is valid\n");}
+    | NOT expression { $$ = !$2; printf("Expression is valid\n"); }
+    | NUMBER { $$ = $1; printf("Expression is valid\n"); }
+    | IDENTIFIER { $$ = symbolVal($1); printf("Expression is valid\n"); }
+    | STRING { $$ = $1; printf("Expression is valid\n"); }
+    | functioncallStatement { $$ = $1; printf("Expression is valid\n"); }
     | empty {printf("Expression is valid\n");}
 ;    
 
@@ -87,7 +87,7 @@ empty:
 ;
 
 printStatements:
-    PRINT LPAREN printStatement RPAREN {printf("Print is valid\n");}
+    PRINT LPAREN printStatement RPAREN 
 ;
 
 printStatement:
