@@ -69,7 +69,7 @@ expression:
     | expression LESS expression { $$ = $1 < $3; printf("Expression is valid\n"); }
     | expression GREATEREQUAL expression { $$ = $1 >= $3; printf("Expression is valid\n"); }
     | expression LESSEQUAL expression { $$ = $1 <= $3; printf("Expression is valid\n"); }
-    | LPAREN expression RPAREN {printf("Expression is valid\n");}
+    | LPAREN expression RPAREN { $$ = $2; printf("Expression is valid\n"); }
     | NOT expression { $$ = !$2; printf("Expression is valid\n"); }
     | NUMBER { $$ = $1; printf("Expression is valid\n"); }
     | IDENTIFIER { $$ = symbolVal($1); printf("Expression is valid\n"); }
