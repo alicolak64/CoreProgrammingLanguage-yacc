@@ -85,7 +85,13 @@ expression:
     | expression PLUS expression {$$ = $1 + $3;}
     | expression MINUS expression {$$ = $1 - $3;}
     | expression MULTIPLY expression {$$ = $1 * $3;}
-    | expression DIVIDE expression {$$ = $1 / $3;}
+    | expression DIVIDE expression { 
+        if ($3 == 0) {
+            yyerror("Error: Cannot divide by 0\n");
+        } else {
+            $$ = $1 / $3; printf("Expression is valid\n"); 
+        }
+    }
     | expression MOD expression {$$ = $1 % $3;} 
     | expression EQUAL expression {$$ = $1 == $3;}
     | expression NOTEQUAL expression {$$ = $1 != $3;}
@@ -95,11 +101,16 @@ expression:
     | expression GREATEREQUAL expression {$$ = $1 >= $3;}
     | expression AND expression {$$ = $1 && $3;}
     | expression OR expression {$$ = $1 || $3;}
-    ;
+    | NOT expression {$$ = !$2;}
+    | LPAREN expression RPAREN {$$ = $2;}
+;
+
+
 
     
-block: LBRACE statements RBRACE {;}
-     ;  
+block:
+    LBRACE statements RBRACE {printf("Block is valid\n");}
+;
       
 
 ifStatement: IF LPAREN expression RPAREN block                                {if($3 == 1) {;} else {;} }
