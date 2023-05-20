@@ -11,6 +11,9 @@ int symbols[52];
 int symbolVal(char symbol);
 void updateSymbolVal(char symbol, int val);
 
+
+void printFunction(void *expr);
+
 %}
 
 %union {int num; char id; char *str;}         
@@ -87,13 +90,13 @@ empty:
 ;
 
 printStatements:
-    PRINT LPAREN printStatement RPAREN 
+    PRINT LPAREN printStatement RPAREN {printf("Print statement is valid\n");}
 ;
 
 printStatement:
-    expression {printf("Print statement is valid\n");};
-    | NEWLINE {printf("Print statement is valid\n");};
-    | WS {printf("Print statement is valid\n");};
+    expression {printFunction($1);};
+    | NEWLINE {printf("\n"};
+    | WS {printf("\t"};
     | empty {printf("Print statement is valid\n");}
 ;    
 
@@ -155,6 +158,24 @@ functionCallParameter:
 
 
 %%
+
+
+void printFunction(void *expr) {
+    if (expr == NULL) {
+        printf("Expression is empty\n");
+    } else if (*(int*)expr) {
+        printf("Integer: %d\n", *(int*)expr);
+    } else if (*(float*)expr) {
+        printf("Float: %f\n", *(float*)expr);
+    } else if (*(bool*)expr) {
+        printf("Boolean: %s\n", (*(bool*)expr) ? "true" : "false");
+    } else if (*(char**)expr) {
+        printf("String: %s\n", *(char**)expr);
+    } else {
+        printf("Unknown type\n");
+    }
+}
+
 
 int computeSymbolIndex(char token)
 {
