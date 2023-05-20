@@ -101,7 +101,7 @@ printStatement:
 ;    
 
 assignmentStatement:
-    IDENTIFIER ASSIGN expression {printf("Assignment is valid\n");}
+    IDENTIFIER ASSIGN expression {updateSymbolVal($1, $3); printf("Assignment statement is valid\n"}
 ;
 
 ifStatement:
