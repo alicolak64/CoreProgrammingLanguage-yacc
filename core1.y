@@ -35,11 +35,13 @@ void updateSymbolVal(char symbol, int val);
 %%
 
 program: 
-    START statements END {printf("Program is valid\n");};
+    START statements END {printf("Program is valid\n");}
+;
 
 statements:
     statements statement {printf("Statement is valid\n");}
-    | statement {printf("Statement is valid\n");};
+    | statement {printf("Statement is valid\n");}
+;
 
 statement:
     printStatements SEMICOLON {printf("Print statement is valid\n");}
@@ -50,7 +52,8 @@ statement:
     | functioncallStatement SEMICOLON {printf("Function call statement is valid\n");}
     | returnStatement SEMICOLON {printf("Return statement is valid\n");}
     | commentStatement {printf("Comment statement is valid\n");}
-    | empty {printf("Empty statement is valid\n");};
+    | empty {printf("Empty statement is valid\n");}
+;
 
 
 expression:
@@ -74,66 +77,82 @@ expression:
     | STRING {printf("Expression is valid\n");}
     | functioncallStatement {printf("Expression is valid\n");}
     | empty {printf("Expression is valid\n");}
-    ;    
+;    
 
-block :
-    LBRACE statements RBRACE {printf("Block is valid\n");};
+block:
+    LBRACE statements RBRACE {printf("Block is valid\n");}
+;
 
-empty : 
-    {printf("Empty is valid\n");};
+empty: 
+    {printf("Empty is valid\n");}
+;
 
 printStatements:
-    PRINT LPAREN printStatement RPAREN {printf("Print is valid\n");};
+    PRINT LPAREN printStatement RPAREN {printf("Print is valid\n");}
+;
 
 printStatement:
     expression {printf("Print statement is valid\n");};
     | NEWLINE {printf("Print statement is valid\n");};
     | WS {printf("Print statement is valid\n");};
-    | empty {printf("Print statement is valid\n");};    
+    | empty {printf("Print statement is valid\n");}
+;    
 
 assignmentStatement:
-    IDENTIFIER ASSIGN expression {printf("Assignment is valid\n");};
+    IDENTIFIER ASSIGN expression {printf("Assignment is valid\n");}
+;
 
 ifStatement:
     IF LPAREN expression RPAREN block {printf("If is valid\n");}
     | IF LPAREN expression RPAREN block ELSE block {printf("If is valid\n");}
     | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block {printf("If is valid\n");}
-    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block ELSE block {printf("If is valid\n");};
+    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block ELSE block {printf("If is valid\n");}
+;
 
 elseIfStatement:
     ELSEIF LPAREN expression RPAREN block {printf("Else if is valid\n");}
-    | ELSEIF LPAREN expression RPAREN block elseIfStatement {printf("Else if is valid\n");};    
+    | ELSEIF LPAREN expression RPAREN block elseIfStatement {printf("Else if is valid\n");}
+;    
 
 whileStatement:
-    WHILE LPAREN expression RPAREN block {printf("While is valid\n");};
+    WHILE LPAREN expression RPAREN block {printf("While is valid\n");}
+;
 
 functionStatement:
-    FUNC FUNCNAME LPAREN functionParameters RPAREN block {printf("Function is valid\n");};
+    FUNC FUNCNAME LPAREN functionParameters RPAREN block {printf("Function is valid\n");}
+;
 
 functioncallStatement:
-    FUNCNAME LPAREN functionCallParameters RPAREN {printf("Function call is valid\n");};
+    FUNCNAME LPAREN functionCallParameters RPAREN {printf("Function call is valid\n");}
+;
 
 returnStatement:
-    RETURN expression {printf("Return is valid\n");};
+    RETURN expression {printf("Return is valid\n");}
+;
 
 commentStatement:
-    COMMENT {printf("Comment is valid\n");};
+    COMMENT {printf("Comment is valid\n");}
+;
 
 functionParameters:
     functionParameters COMMA functionParameter {printf("Function parameters is valid\n");}
-    | functionParameter {printf("Function parameters is valid\n");};
+    | functionParameter {printf("Function parameters is valid\n");}
+;
 
 functionParameter:
     IDENTIFIER {printf("Function parameter is valid\n");};
-    | empty {printf("Function parameter is valid\n");};  
+    | empty {printf("Function parameter is valid\n");}
+;  
 
 functionCallParameters:
     functionCallParameters COMMA functionCallParameter {printf("Function call parameters is valid\n");}
-    | functionCallParameter {printf("Function call parameters is valid\n");};
+    | functionCallParameter {printf("Function call parameters is valid\n");}
+;
 
 functionCallParameter:
     expression {printf("Function call parameter is valid\n");};
-    | empty {printf("Function call parameter is valid\n");};
+    | empty {printf("Function call parameter is valid\n");}
+;
 
 
 %%
