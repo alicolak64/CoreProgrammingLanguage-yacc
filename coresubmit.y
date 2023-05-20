@@ -39,8 +39,8 @@ char *stringsVal(char symbol);
 %token <num> NUMBER
 
 %type <id> assignmentStatement 
-%type <num> exp term arithmeticStatement
-%type <str> STRING_term 
+%type <num> expression term arithmeticStatement
+%type <str> stringTerm 
 
 %left PLUS MINUS
 %left MULTIPLY DIVIDE MOD
@@ -72,21 +72,46 @@ statement:
     | funcStatement {printf("Function statement is valid\n");}
 ;
 
+term: 
+    NUMBER {$$ = $1;}
+    | IDENTIFIER {$$ = symbolVal($1);}
+
+stringTerm: 
+    STRING {$$ = $1;}
+    | IDENTIFIER {$$ = stringsVal($1);}
+
+expression: 
+    term {$$ = $1;}
+    | expression PLUS expression {$$ = $1 + $3;}
+    | expression MINUS expression {$$ = $1 - $3;}
+    | expression MULTIPLY expression {$$ = $1 * $3;}
+    | expression DIVIDE expression {$$ = $1 / $3;}
+    | expression MOD expression {$$ = $1 % $3;} 
+    | expression EQUAL expression {$$ = $1 == $3;}
+    | expression NOTEQUAL expression {$$ = $1 != $3;}
+    | expression LESS expression {$$ = $1 < $3;}
+    | expression LESSEQUAL expression {$$ = $1 <= $3;}
+    | expression GREATER expression {$$ = $1 > $3;}
+    | expression GREATEREQUAL expression {$$ = $1 >= $3;}
+    | expression AND expression {$$ = $1 && $3;}
+    | expression OR expression {$$ = $1 || $3;}
+    ;
+
     
 block: LBRACE statements RBRACE {;}
      ;  
       
 
-ifStatement: IF LPAREN exp RPAREN block                                {if($3 == 1) {;} else {;} }
-       | IF LPAREN exp RPAREN block ELSE block                     {if($3 == 1) {;} else {;} }
-       | IF LPAREN exp RPAREN block elseifStatement ELSE block         {if($3 == 1) {;} else {;} }
+ifStatement: IF LPAREN expression RPAREN block                                {if($3 == 1) {;} else {;} }
+       | IF LPAREN expression RPAREN block ELSE block                     {if($3 == 1) {;} else {;} }
+       | IF LPAREN expression RPAREN block elseifStatement ELSE block         {if($3 == 1) {;} else {;} }
        ;
 
-elseifStatement: ELSEIF LPAREN exp RPAREN block                        {if($3 == 1) ; else ;}
+elseifStatement: ELSEIF LPAREN expression RPAREN block                        {if($3 == 1) ; else ;}
            ; 
 
 
-whileStatement: WHILE LPAREN exp RPAREN block                          {;}
+whileStatement: WHILE LPAREN expression RPAREN block                          {;}
           ;
 
 funcStatement: FUNC IDENTIFIER LPAREN params RPAREN block              {;}
@@ -98,14 +123,14 @@ callFuncStatement: IDENTIFIER LPAREN params RPAREN                    {;}
 exitStatement: END                            {printf("See you next time\n"); exit(EXIT_SUCCESS);}
          ;
 //print
-printStatement: PRINT STRING_term           {printf("%s\n", $2);}
-          | PRINT exp                   {printf("%d\n", $2);}
+printStatement: PRINT stringTerm           {printf("%s\n", $2);}
+          | PRINT expression                   {printf("%d\n", $2);}
           | PRINT NEWLINE               {printf("\n");}
           ;       
             
-assignmentStatement : IDENTIFIER ASSIGN exp            {updateSymbolVal($1,$3);}
+assignmentStatement : IDENTIFIER ASSIGN expression            {updateSymbolVal($1,$3);}
            | IDENTIFIER ASSIGN assignmentStatement     {;}
-           | IDENTIFIER ASSIGN STRING_term    {updateStringsVal($1,$3);}
+           | IDENTIFIER ASSIGN stringTerm    {updateStringsVal($1,$3);}
            ;    
 
 arithmeticStatement : term                     {;} 
@@ -113,30 +138,10 @@ arithmeticStatement : term                     {;}
                 | arithmeticStatement MINUS term {printf("%d\n", $1 - $3);}
                 | arithmeticStatement MULTIPLY term {printf("%d\n", $1 * $3);}
                 | arithmeticStatement DIVIDE term {printf("%d\n", $1 / $3);}
-                ;
+                ;              
 
-exp      : term                             {$$ = $1;}
-         | exp PLUS term                     {$$ = $1 + $3;}
-         | exp MINUS term                     {$$ = $1 - $3;}
-         | exp MULTIPLY term                     {$$ = $1 * $3;}
-         | exp DIVIDE term                     {$$ = $1 / $3;}
-         | exp MOD term                     {$$ = $1 % $3;} 
-         | exp EQUAL term                      {$$ = $1 == $3;}
-         | exp NOTEQUAL term                     {$$ = $1 != $3;}
-         | exp LESS term                    {$$ = $1 < $3;}
-         | exp LESSEQUAL term                 {$$ = $1 <= $3;}
-         | exp GREATER term                     {$$ = $1 > $3;}
-         | exp GREATEREQUAL term                  {$$ = $1 >= $3;}
-         | exp AND term                     {$$ = $1 && $3;}
-         | exp OR term                      {$$ = $1 || $3;}
-         ;                
+      
 
-term     : NUMBER                           {$$ = $1;}
-         | IDENTIFIER                       {$$ = symbolVal($1);}
-         ;       
-
-STRING_term  : STRING                       {$$ = $1;}
-             ;
 params   : param                      {;}
          | params COMMA param            {;}
          ;
