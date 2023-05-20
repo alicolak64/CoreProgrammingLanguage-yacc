@@ -62,7 +62,13 @@ expression:
     expression PLUS expression { $$ = $1 + $3; printf("Expression is valid\n"); }
     | expression MINUS expression { $$ = $1 - $3; printf("Expression is valid\n"); }
     | expression MULTIPLY expression { $$ = $1 * $3; printf("Expression is valid\n"); }
-    | expression DIVIDE expression { $$ = $1 / $3.num; printf("Expression is valid\n"); }
+    | expression DIVIDE expression { 
+        if ($3 == 0) {
+            yyerror("Error: Cannot divide by 0\n");
+        } else {
+        $$ = $1 / $3; printf("Expression is valid\n"); 
+        }
+    }
     | expression MOD expression { $$ = $1 % $3; printf("Expression is valid\n"); }
     | expression AND expression { $$ = $1 && $3; printf("Expression is valid\n"); }
     | expression OR expression { $$ = $1 || $3; printf("Expression is valid\n"); }
