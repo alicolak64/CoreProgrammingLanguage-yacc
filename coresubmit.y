@@ -1,23 +1,22 @@
 %{
-void yyerror (char const *s);
+void yyerror (char *s);
 int yylex();
+
 #include <stdio.h>   
-#include <time.h>  
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-//default symbols
+
 int symbols[52];
 char *strings[52];
+
 int symbolVal(char symbol);
-double runTime(void (*fx)(void));
 void updateSymbolVal(char symbol, int val);
 void updateStringsVal(char symbol, char *val);
 int computeSymbolIndex(char token);
 char *stringsVal(char symbol);
 
 
-//calculating functions
 %}
 
 %union {
@@ -32,14 +31,14 @@ char *stringsVal(char symbol);
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE MOD AND OR NOT
 %token EQUAL NOTEQUAL GREATER LESS GREATEREQUAL LESSEQUAL
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA
-%token IF ELSE ELSEIF WHILE FUNC
+%token IF ELSE ELSEIF WHILE
 
 %token <id> IDENTIFIER
 %token <str> STRING
 %token <num> NUMBER
 
 %type <id> assignmentStatement 
-%type <num> expression term arithmeticStatement
+%type <num> expression term  
 %type <str> stringTerm 
 
 %left PLUS MINUS
@@ -49,8 +48,6 @@ char *stringsVal(char symbol);
 %left LPAREN RPAREN LBRACE RBRACE COMMA SEMICOLON NEWLINE COMMENT
  
 %%
-
-
 
 program: 
     START statements END {printf("Program is valid\n");}
@@ -66,19 +63,17 @@ statement:
     | assignmentStatement SEMICOLON {;}
     | ifStatement {;}
     | whileStatement {;}
-    | callFuncStatement SEMICOLON {;}
-    | arithmeticStatement SEMICOLON {;}
     | exitStatement {;}
-    | funcStatement {;}
+    | commentStatement {;}
 ;
 
 term: 
     NUMBER {$$ = $1;}
-    | IDENTIFIER {$$ = symbolVal($1);}
+    | IDENTIFIER {printf("TermInt");$$ = symbolVal($1);}
 
 stringTerm: 
     STRING {$$ = $1;}
-    | IDENTIFIER {$$ = stringsVal($1);}
+    | IDENTIFIER {printf("TermStr");$$ = stringsVal($1);}
 
 expression: 
     term {$$ = $1;}
@@ -114,48 +109,53 @@ printStatement:
     | PRINT expression {printf("%d\n", $2);}
     | PRINT NEWLINE {printf("\n");}
 ;
+
+assignmentStatement: 
+    IDENTIFIER ASSIGN expression       {printf("AssignInt");updateSymbolVal($1,$3);}
+    | IDENTIFIER ASSIGN stringTerm       {printf("AssignStr");updateStringsVal($1,$3);}
+;      
+
+// To do
+ifStatement:
+    IF LPAREN expression RPAREN block { 
+        printf("If is valid\n");
+    }
+    | IF LPAREN expression RPAREN block ELSE block {
+        printf("If is valid\n");
+    }
+    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block {
+        printf("If is valid\n");
+    }
+    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block ELSE block {
+        printf("If is valid\n");
+    }
+;
+
+// To do
+elseIfStatement:
+    ELSEIF LPAREN expression RPAREN block {
+
+    }
+    | ELSEIF LPAREN expression RPAREN block elseIfStatement {
+        
+    }
+;  
+
+// To do
+whileStatement:
+    WHILE LPAREN expression RPAREN block {
+        printf("While is valid\n");
+    }
+;
+
+exitStatement: 
+    END        {printf("See you next time\n"); exit(EXIT_SUCCESS);}
+; 
+
+commentStatement:
+    COMMENT  {printf("Comment is valid\n");}
+;       
       
-
-ifStatement: IF LPAREN expression RPAREN block                                {if($3 == 1) {;} else {;} }
-       | IF LPAREN expression RPAREN block ELSE block                     {if($3 == 1) {;} else {;} }
-       | IF LPAREN expression RPAREN block elseifStatement ELSE block         {if($3 == 1) {;} else {;} }
-       ;
-
-elseifStatement: ELSEIF LPAREN expression RPAREN block                        {if($3 == 1) ; else ;}
-           ; 
-
-
-whileStatement: WHILE LPAREN expression RPAREN block                          {;}
-          ;
-
-funcStatement: FUNC IDENTIFIER LPAREN params RPAREN block              {;}
-         ;
-
-callFuncStatement: IDENTIFIER LPAREN params RPAREN                    {;}
-              ;
-
-exitStatement: END                            {printf("See you next time\n"); exit(EXIT_SUCCESS);}
-         ; 
-            
-assignmentStatement : IDENTIFIER ASSIGN expression            {updateSymbolVal($1,$3);}
-           | IDENTIFIER ASSIGN assignmentStatement     {;}
-           | IDENTIFIER ASSIGN stringTerm    {updateStringsVal($1,$3);}
-           ;    
-
-arithmeticStatement : term                     {;} 
-                | arithmeticStatement PLUS term {printf("%d\n", $1 + $3);}
-                | arithmeticStatement MINUS term {printf("%d\n", $1 - $3);}
-                | arithmeticStatement MULTIPLY term {printf("%d\n", $1 * $3);}
-                | arithmeticStatement DIVIDE term {printf("%d\n", $1 / $3);}
-                ;              
-
-      
-
-params   : param                      {;}
-         | params COMMA param            {;}
-         ;
-                    
-param : IDENTIFIER COMMA COMMA           
        
 %%
 
@@ -173,21 +173,13 @@ int computeSymbolIndex(char token)
 
 int symbolVal(char symbol)
 {
-    int idx = computeSymbolIndex(symbol);
-    if(idx == -1){
-        printf("Symbol %c not found\n", symbol);
-        exit(EXIT_FAILURE);
-    }
-    return symbols[idx];
+    int bucket = computeSymbolIndex(symbol);
+	return symbols[bucket];
 }
 
 char *stringsVal(char symbol)
 {
     int idx = computeSymbolIndex(symbol);
-    if(idx == -1){
-        printf("Symbol %c not found\n", symbol);
-        exit(EXIT_FAILURE);
-    }
     printf("%s\n", strings[idx]);
     return strings[idx];
 }
@@ -196,19 +188,11 @@ char *stringsVal(char symbol)
 void updateSymbolVal(char symbol, int val)
 {
     int idx = computeSymbolIndex(symbol);
-    if(idx == -1){
-        printf("Symbol %c not found\n", symbol);
-        exit(EXIT_FAILURE);
-    }
     symbols[idx] = val;
 }
 void updateStringsVal(char symbol, char *val)
 {
     int idx = computeSymbolIndex(symbol);
-    if(idx == -1){
-        printf("Symbol %c not found\n", symbol);
-        exit(EXIT_FAILURE);
-    }
     strings[idx] = val;
 }
 
@@ -221,7 +205,10 @@ int main(void){
 return yyparse();
 }
 
-void yyerror(char const *s)
-{
-    fprintf(stderr, "%s\n", s);
+extern int lineCounter;
+
+void yyerror (char *s) {
+    printf ("%s on line %d\n", s, lineCounter);
+    fprintf (stderr, "%s\n", s);
+    exit (EXIT_FAILURE);
 }
