@@ -14,7 +14,6 @@ void updateSymbolVal(char symbol, int val);
 %}
 
 %union {int num; char id; char *str;}         
-%union {char *child;}
 
 %start program
 
