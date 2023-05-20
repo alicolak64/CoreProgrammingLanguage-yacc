@@ -94,42 +94,102 @@ printStatements:
 ;
 
 printStatement:
-    expression {printFunction($1);};
-    | NEWLINE {printf("\n"};
-    | WS {printf("\t"};
+    expression {printFunction($1);}
+    | NEWLINE {printf("\n)";}
+    | WS {printf("\t");}
     | empty {printf("Print statement is valid\n");}
 ;    
 
 assignmentStatement:
-    IDENTIFIER ASSIGN expression {updateSymbolVal($1, $3); printf("Assignment statement is valid\n"}
+    IDENTIFIER ASSIGN expression {updateSymbolVal($1, $3); printf("Assignment statement is valid\n";}
 ;
 
 ifStatement:
-    IF LPAREN expression RPAREN block {printf("If is valid\n");}
-    | IF LPAREN expression RPAREN block ELSE block {printf("If is valid\n");}
-    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block {printf("If is valid\n");}
-    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block ELSE block {printf("If is valid\n");}
+    IF LPAREN expression RPAREN block { 
+        printf("If is valid\n");
+        if ($3) {
+            $$ = $5;
+        } else {
+            $$ = NULL;
+        }
+    }
+    | IF LPAREN expression RPAREN block ELSE block {
+        printf("If is valid\n");
+        if ($3) {
+            $$ = $5;
+        } else {
+            $$ = $7;
+        }
+    }
+    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block {
+        printf("If is valid\n");
+        if ($3) {
+            $$ = $5;
+        } else {
+            $$ = $8;
+        }
+    }
+    | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block ELSE block {
+        printf("If is valid\n");
+
+        if ($3) {
+            $$ = $5;
+        } else if ($8) {
+            $$ = $8;
+        } else {
+            $$ = $10;
+        }
+
+    }
 ;
 
 elseIfStatement:
-    ELSEIF LPAREN expression RPAREN block {printf("Else if is valid\n");}
-    | ELSEIF LPAREN expression RPAREN block elseIfStatement {printf("Else if is valid\n");}
+    ELSEIF LPAREN expression RPAREN block {
+        printf("Else if is valid\n");
+        if ($3) {
+            $$ = $5;
+        } else {
+            $$ = NULL;
+        }
+    }
+    | ELSEIF LPAREN expression RPAREN block elseIfStatement {
+        printf("Else if is valid\n");
+        if ($3) {
+            $$ = $5;
+        } else {
+            $$ = $7;
+        }
+    }
 ;    
 
 whileStatement:
-    WHILE LPAREN expression RPAREN block {printf("While is valid\n");}
+    WHILE LPAREN expression RPAREN block {
+        printf("While is valid\n");
+        while ($3) {
+            $5;
+        }
+    }
 ;
 
 functionStatement:
-    FUNC FUNCNAME LPAREN functionParameters RPAREN block {printf("Function is valid\n");}
+    FUNC FUNCNAME LPAREN functionParameters RPAREN block {
+        printf("Function is valid\n");
+        $$ = $7;
+    }
 ;
 
 functioncallStatement:
-    FUNCNAME LPAREN functionCallParameters RPAREN {printf("Function call is valid\n");}
+    FUNCNAME LPAREN functionCallParameters RPAREN {
+        printf("Function call is valid\n");
+        $$ = $3;
+    }
 ;
 
 returnStatement:
-    RETURN expression {printf("Return is valid\n");}
+    RETURN expression {
+        printf("Return is valid\n");
+        $$ = $2;
+    }
 ;
 
 commentStatement:
