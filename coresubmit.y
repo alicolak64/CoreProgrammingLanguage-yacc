@@ -27,7 +27,7 @@ char *stringsVal(char symbol);
 
 %start program
 
-%token START END PRINT NEWLINE COMMENT
+%token START END PRINT COMMENT NEWLINE
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE MOD AND OR NOT
 %token EQUAL NOTEQUAL GREATER LESS GREATEREQUAL LESSEQUAL
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON COMMA
@@ -45,7 +45,7 @@ char *stringsVal(char symbol);
 %left MULTIPLY DIVIDE MOD
 %left AND OR NOT ASSIGN
 %left EQUALS NOTEQUAL GREATER LESS GREATEREQUAL LESSEQUAL
-%left LPAREN RPAREN LBRACE RBRACE COMMA SEMICOLON NEWLINE COMMENT
+%left LPAREN RPAREN LBRACE RBRACE COMMA SEMICOLON COMMENT
  
 %%
 
@@ -69,11 +69,11 @@ statement:
 
 term: 
     NUMBER {$$ = $1;}
-    | IDENTIFIER {printf("TermInt");$$ = symbolVal($1);}
+    | IDENTIFIER {$$ = symbolVal($1);}
 
 stringTerm: 
     STRING {$$ = $1;}
-    | IDENTIFIER {printf("TermStr");$$ = stringsVal($1);}
+    | IDENTIFIER {$$ = stringsVal($1);}
 
 expression: 
     term {$$ = $1;}
@@ -105,14 +105,19 @@ block:
 ;
 
 printStatement:
-    PRINT stringTerm {printf("%s\n", $2);}
-    | PRINT expression {printf("%d\n", $2);}
-    | PRINT NEWLINE {printf("\n");}
+    PRINT LPAREN stringTerm RPAREN {
+        if (strcmp($3, "/n") == 0) {
+            printf("\n");
+        } else {
+           printf("%s\n", $3); 
+        } 
+    }
+    | PRINT LPAREN expression RPAREN {printf("%d\n", $3);}
 ;
 
 assignmentStatement: 
-    IDENTIFIER ASSIGN expression       {printf("AssignInt");updateSymbolVal($1,$3);}
-    | IDENTIFIER ASSIGN stringTerm       {printf("AssignStr");updateStringsVal($1,$3);}
+    IDENTIFIER ASSIGN expression       {updateSymbolVal($1,$3);}
+    | IDENTIFIER ASSIGN stringTerm       {updateStringsVal($1,$3);}
 ;      
 
 // To do
