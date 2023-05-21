@@ -6,5 +6,5 @@ core  : core.l core.y
 run :  core
 		./core < exampleprog1.core	
 
-clear :
+clean :
 			rm -f y.tab.c y.tab.h lex.yy.c core
