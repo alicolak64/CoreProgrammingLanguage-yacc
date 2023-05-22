@@ -1,39 +1,44 @@
 START
 
-print("/n");
-print("/n");
-print("/n");
-print("/n");
+    // This is comment line
+    print("/n");
+    print("/n");
+    print("/n");
+    print("/n");
 
-print("Hello World!");
-print("Welcome the our language");
-print("/n");
-print("-----------------this is a comment-----------------");
-print("/n");
-print("/n");
-print("Example of a comment");
-print("/n");
-print("/n");
-print("------------Lets play with numbers------------");
-print("-------------Lets assign and print it-------------");
-a = 14;
-b = 4;
-c = a + b;
-d = 0;
-print (c);
-if(a != b)
-{
-print("it's in the if");
-print (a + c) ;
-}else {
-print ("it's in the else");
-}
+    print("Hello World!");
+    print("Welcome the core language");
+    print("/n");
+    print("/n");
+    print("/n");
+    print("Example of a comment");
+    print("/n");
+    print("/n");
+    print("------------Lets play with numbers------------");
+    print("-------------Lets assign and print it-------------");
+    a = 14;
+    b = 4;
+    c = a + b;
+    d = 0;
+    print (c);
 
-print ("--------------Lets play with strings-----------------");
+    // e = a / 0 print("This is an error"); 
 
-print ("hello, world!");
-strVal = "Galatasaary";
+    if(a != b) {
+        print("it's in the if");
+        print (a + c) ;
+    }
 
-print (strVal);
+    print ("--------------Lets play with strings-----------------");
+
+    print ("hello, world!");
+    strVal = "Galatasaray";
+
+    if (d == 0) {
+        print("If block is valid");
+    } 
+
+    // Comment
+
 
 END
