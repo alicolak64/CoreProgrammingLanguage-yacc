@@ -52,7 +52,9 @@ COMMENT [\/][\/].*
                         yylval.str = str;
                         return STRING;
                     }
+{COMMENT}           return (COMMENT);      
 {NEWLINE}           {lineCounter++;}
+
 [ \t\r]             ;
 [-+*/=;]            return yytext[0];
 .                   {yyerror ("unexpected character");}
