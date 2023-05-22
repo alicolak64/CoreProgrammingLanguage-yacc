@@ -1,10 +1,11 @@
 START
 
+    print("/n");
+    print("/n");
+    print("/n");
+    print("/n");
     // This is comment line
-    print("/n");
-    print("/n");
-    print("/n");
-    print("/n");
+
 
     print("Hello World!");
     print("Welcome the core language");
