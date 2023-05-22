@@ -50,7 +50,7 @@ char *stringsVal(char symbol);
 %%
 
 program: 
-    START statements END {printf("Program is valid\n");}
+    startStatement statements endStatement {printf("Program is valid\n");}
 ;
 
 statements: 
@@ -63,7 +63,8 @@ statement:
     | assignmentStatement SEMICOLON {;}
     | ifStatement {;}
     | whileStatement {;}
-    | exitStatement {;}
+    | endStatement {;}
+    | startStatement {;}
     | commentStatement {;}
 
 ;
@@ -173,7 +174,10 @@ whileStatement:
     }
 ;
 
-exitStatement: 
+startStatement:
+    START      {printf("Started Program\n");}
+
+endStatement: 
     END        {printf("Ended Program\n"); exit(EXIT_SUCCESS);}
 ; 
 
