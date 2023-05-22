@@ -65,6 +65,7 @@ statement:
     | whileStatement {;}
     | exitStatement {;}
     | commentStatement {;}
+
 ;
 
 term: 
@@ -123,33 +124,52 @@ assignmentStatement:
 // To do
 ifStatement:
     IF LPAREN expression RPAREN block { 
-        printf("If is valid\n");
+        if ($3) {
+            // run $5
+        } 
     }
     | IF LPAREN expression RPAREN block ELSE block {
-        printf("If is valid\n");
+        if ($3) {
+            // run $5
+        } else {
+            // run $7
+        }
     }
     | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block {
-        printf("If is valid\n");
+        if ($3) {
+            // run $5
+        } else if ($8) {
+            // run $10
+        }
     }
     | IF LPAREN expression RPAREN block elseIfStatement LPAREN expression RPAREN block ELSE block {
-        printf("If is valid\n");
+        if ($3) {
+            // run $5
+        } else if ($8) {
+            // run $10
+        } else {
+            // run $12
+        }
     }
 ;
 
 // To do
 elseIfStatement:
     ELSEIF LPAREN expression RPAREN block {
-
+        if ($3) {
+            // run $5
+        }
     }
     | ELSEIF LPAREN expression RPAREN block elseIfStatement {
-        
     }
 ;  
 
 // To do
 whileStatement:
     WHILE LPAREN expression RPAREN block {
-        printf("While is valid\n");
+        while ($3){
+            // run $5
+        }
     }
 ;
 
