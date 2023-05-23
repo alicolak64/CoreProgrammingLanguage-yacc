@@ -47,41 +47,66 @@ In general, we have a ready-made sample program file that contains programs simi
 
 > make clean
 
-### Syntax:
+### Syntax in BNF Form:
 
 ```
 
-\<prog\> : \<stmt\> | \<stmts\>
+\<program\> : \<startStatement\> <statements> <endStatement>
 
-\<stmts\> : \<stmt\> | \<stmt\> ; \<stmts\>
+\<statements\> : \<statement\> <statements> | \<statement\>
 
-\<stmt\> : \<expr\> | <if_stmt> | <while_loop> | <for_loop> | <print> | <func> | <IO_stmt> | <assignment>
+\<statement\> : \<printStatement\> SEMICOLON 
+                | <assignmentStatement> SEMICOLON
+                | <ifStatement> 
+                | <whileStatement> 
+                | <endStatement> 
+                | <startStatement> 
+                | <commentStatement>
 
-\<if_stmt\> :  IF_STMT OPEN_PARANTHESIS <expr> CLOSE_PARANTHESIS OPEN_CURLY <stmts> CLOSE_CURLY 
-               {ELSE_IF_STMT OPEN_PARANTHESIS <expr> CLOSE_PARANTHESIS OPEN_CURLY <stmts> CLOSE_CURLY} 
-               {ELSE_STMT OPEN_PARANTHESIS <expr> CLOSE_PARANTHESIS OPEN_CURLY <stmts> CLOSE_CURLY }
-  
-\<while_loop\> :  WHILE_LOOP OPEN_PARANTHESIS <logic_expr> CLOSE_PARANTHESIS OPEN_CURLY <stmts> CLOSE_CURLY
-  
-\<for_loop\> : FOR_LOOP OPEN_PARANTHESIS <type> VARIABLE : VARIABLE CLOSE_PARANTHESIS OPEN_CURLY <stmts> CLOSE_CURLY
-  
-\<type\> : INT_TYPE | FLOAT_TYPE | STRING_TYPE | BOOLEAN_TYPE | CHAR_TYPE | CONSTANT | VOID_TYPE
+<term> : NUMBER
+        | IDENTIFIER
 
-\<exp\> : <expr> - <term> | <expr> + <term> | <term>
-  
-\<logic_exp\> : <term> EQUALITY_CHECK <term> | <term> NOT_EQUAL_CHECK <term> | <term> 'AND_OP' <term> | <term> 'OR_OP' <term>
-                | <term> 'SMALLER_OP' <term> | <term> GREATER_OR_EQUAL_OP <term> | <term> SMALLER_OR_EQUAL_OP <term> | NOT_OP <term>
-  
-\<term\> : <term> / CONSTANT | <term> * CONSTANT | CONSTANT
-  
-\<print\> : PRINT OPEN_PARENTHESIS <expr> CLOSE_PARENTHESIS
+<stringTerm> : STRING
+              | IDENTIFIER
 
-\<func\> : FUNCTION <type> <variable> OPEN_PARENTHESIS {<type> <variable> | <type> <variable> , [<type> <variable>]+ } CLOSE_PARENTHESIS
+<expression> : <term>
+              | <expression> PLUS <expression>
+              | <expression> MINUS <expression>
+              | <expression> MULTIPLY <expression>              
+              | <expression> DIVIDE <expression>
+              | <expression> MOD <expression>
+              | <expression> EQUAL <expression>
+              | <expression> NOTEQUAL <expression>
+              | <expression> LESS <expression>
+              | <expression> LESSEQUAL <expression>
+              | <expression> GREATER <expression>
+              | <expression> GREATEREQUAL <expression>
+              | <expression> AND <expression>
+              | <expression> OR <expression>
+              | NOT <expression>
+              | LPAREN <expression> RPAREN
 
-\<IO_stmt\> : IO_OP OPEN_PARENTHESIS VARIABLE VARIABLE CLOSE_PARENTHESIS
+<block> : LBRACE <statements> RBRACE
 
-\<assignment\> : <type> <variable> EQUAL_SIGN <variable>  
+<printStatement> : PRINT LPAREN <stringTerm> RPAREN
+                  | PRINT LPAREN <expression> RPAREN
 
-\<var\> : CONST | VARIABLE
+<assignmentStatement> : IDENTIFIER ASSIGN <expression>
+                       | IDENTIFIER ASSIGN <stringTerm>
 
-```
+<ifStatement> : IF LPAREN <expression> RPAREN <block>
+               | IF LPAREN <expression> RPAREN <block> ELSE <block>
+               | IF LPAREN <expression> RPAREN <block> <elseIfStatement> LPAREN <expression> RPAREN <block>
+               | IF LPAREN <expression> RPAREN <block> <elseIfStatement> LPAREN <expression> RPAREN <block> ELSE <block>
+
+<elseIfStatement> : ELSEIF LPAREN <expression> RPAREN <block>
+                   | ELSEIF LPAREN <expression> RPAREN <block> <elseIfStatement>
+
+<whileStatement> : WHILE LPAREN <expression> RPAREN <block>
+
+<startStatement> : START
+
+<endStatement> : END
+
+<commentStatement> : COMMENT
+           

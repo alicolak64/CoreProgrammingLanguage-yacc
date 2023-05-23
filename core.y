@@ -175,10 +175,10 @@ whileStatement:
 ;
 
 startStatement:
-    START      {printf("Started Program\n");}
+    START      {printf("PROGRAM STARTED\n");}
 
 endStatement: 
-    END        {printf("Ended Program\n"); exit(EXIT_SUCCESS);}
+    END        {printf("PROGRAM FINISHED\n"); exit(EXIT_SUCCESS);}
 ; 
 
 commentStatement:
