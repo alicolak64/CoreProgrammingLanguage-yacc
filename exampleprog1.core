@@ -25,6 +25,8 @@ START
 
     // e = a / 0 print("This is an error"); 
 
+    print("-------------Lets play with if statements-------------");
+
     if(a != b) {
         print("it's in the if");
         print (a + c) ;
@@ -39,7 +41,13 @@ START
         print("If block is valid");
     } 
 
-    // Comment
+    print("--------------Lets play with while loop-----------------");
 
+    while (d < 0) {
+        d = d + 1;
+        print(d);
+    }
+
+    // Comment
 
 END
