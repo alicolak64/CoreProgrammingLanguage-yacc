@@ -56,7 +56,6 @@ COMMENT [\/][\/].*
 {NEWLINE}           {lineCounter++;}
 
 [ \t\r]             ;
-[-+*/=;]            return yytext[0];
 .                   {yyerror ("unexpected character");}
 
 

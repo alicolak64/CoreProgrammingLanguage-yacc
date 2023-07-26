@@ -1,4 +1,5 @@
 %{
+    
 void yyerror (char *s);
 int yylex();
 
@@ -15,7 +16,6 @@ void updateSymbolVal(char symbol, int val);
 void updateStringsVal(char symbol, char *val);
 int computeSymbolIndex(char token);
 char *stringsVal(char symbol);
-
 
 %}
 
@@ -75,7 +75,6 @@ term:
 
 stringTerm: 
     STRING {$$ = $1;}
-    | IDENTIFIER {$$ = stringsVal($1);}
 
 expression: 
     term {$$ = $1;}
@@ -122,7 +121,7 @@ assignmentStatement:
     | IDENTIFIER ASSIGN stringTerm       {updateStringsVal($1,$3);}
 ;      
 
-// To do
+
 ifStatement:
     IF LPAREN expression RPAREN block { 
         if ($3) {
@@ -154,7 +153,6 @@ ifStatement:
     }
 ;
 
-// To do
 elseIfStatement:
     ELSEIF LPAREN expression RPAREN block {
         if ($3) {
@@ -165,7 +163,6 @@ elseIfStatement:
     }
 ;  
 
-// To do
 whileStatement:
     WHILE LPAREN expression RPAREN block {
         while ($3){
